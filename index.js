@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 
 const fs = require("fs");
-const path = require("path");
+const path = require('path')
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const multer = require("multer");
 
@@ -13,7 +13,7 @@ const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({
   model: "models/gemini-2.0-flash",
   generationConfig: {
-    temperature: 0.5,
+    temperature: 0.6,
   },
 });
 
@@ -40,7 +40,8 @@ const imageToGenerativePart = (filePath) => ({
 
 app.post("/generate-image", upload.single("image"), async (req, res) => {
   const { prompt } = req.body || "Describe the image";
-  const image = imageToGenerativePart(req.file.path);
+  const filePath = req.file.path
+  const image = imageToGenerativePart(filePath);
 
   try {
     const result = await model.generateContent([prompt, image]);
